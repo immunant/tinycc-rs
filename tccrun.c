@@ -39,8 +39,8 @@
 ST_DATA int rt_num_callers = 6;
 ST_DATA const char **rt_bound_error_msg;
 ST_DATA void *rt_prog_main;
-static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level);
-static void rt_error(ucontext_t *uc, const char *fmt, ...);
+int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level);
+void rt_error(ucontext_t *uc, const char *fmt, ...);
 static void set_exception_handler(void);
 #endif
 
@@ -279,7 +279,6 @@ static void set_pages_executable(void *ptr, unsigned long length)
     unsigned long old_protect;
     VirtualProtect(ptr, length, PAGE_EXECUTE_READWRITE, &old_protect);
 #else
-    void __clear_cache(void *beginning, void *end);
 # ifndef HAVE_SELINUX
     addr_t start, end;
 #  ifndef PAGESIZE
@@ -292,6 +291,7 @@ static void set_pages_executable(void *ptr, unsigned long length)
         tcc_error("mprotect failed: did you mean to configure --with-selinux?");
 # endif
 # if defined TCC_TARGET_ARM || defined TCC_TARGET_ARM64
+    void __clear_cache(void *beginning, void *end);
     __clear_cache(ptr, (char *)ptr + length);
 # endif
 #endif
@@ -331,7 +331,7 @@ ST_FUNC void tcc_set_num_callers(int n)
 
 /* print the position in the source file of PC value 'pc' by reading
    the stabs debug information */
-static addr_t rt_printline(addr_t wanted_pc, const char *msg)
+addr_t rt_printline(addr_t wanted_pc, const char *msg)
 {
     char func_name[128], last_func_name[128];
     addr_t func_addr, last_pc, pc;
@@ -473,26 +473,26 @@ no_stabs:
 }
 
 /* emit a run time error at position 'pc' */
-static void rt_error(ucontext_t *uc, const char *fmt, ...)
-{
-    va_list ap;
-    addr_t pc;
-    int i;
+// static void rt_error(ucontext_t *uc, const char *fmt, ...)
+// {
+//     va_list ap;
+//     addr_t pc;
+//     int i;
 
-    fprintf(stderr, "Runtime error: ");
-    va_start(ap, fmt);
-    vfprintf(stderr, fmt, ap);
-    va_end(ap);
-    fprintf(stderr, "\n");
+//     fprintf(stderr, "Runtime error: ");
+//     va_start(ap, fmt);
+//     vfprintf(stderr, fmt, ap);
+//     va_end(ap);
+//     fprintf(stderr, "\n");
 
-    for(i=0;i<rt_num_callers;i++) {
-        if (rt_get_caller_pc(&pc, uc, i) < 0)
-            break;
-        pc = rt_printline(pc, i ? "by" : "at");
-        if (pc == (addr_t)rt_prog_main && pc)
-            break;
-    }
-}
+//     for(i=0;i<rt_num_callers;i++) {
+//         if (rt_get_caller_pc(&pc, uc, i) < 0)
+//             break;
+//         pc = rt_printline(pc, i ? "by" : "at");
+//         if (pc == (addr_t)rt_prog_main && pc)
+//             break;
+//     }
+// }
 
 /* ------------------------------------------------------------- */
 #ifndef _WIN32
@@ -564,7 +564,7 @@ static void set_exception_handler(void)
 #endif
 
 /* return the PC at frame level 'level'. Return negative if not found */
-static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
+int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 {
     addr_t fp;
     int i;
@@ -613,7 +613,7 @@ static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 #elif defined(__x86_64__)
 
 /* return the PC at frame level 'level'. Return negative if not found */
-static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
+int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 {
     addr_t fp;
     int i;
@@ -655,7 +655,7 @@ static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 #elif defined(__arm__)
 
 /* return the PC at frame level 'level'. Return negative if not found */
-static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
+int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 {
     addr_t fp, sp;
     int i;
@@ -697,7 +697,7 @@ static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 /* ------------------------------------------------------------- */
 #elif defined(__aarch64__)
 
-static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
+int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 {
     if (level < 0)
         return -1;
@@ -719,7 +719,7 @@ static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 #else
 
 #warning add arch specific rt_get_caller_pc()
-static int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
+int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level)
 {
     return -1;
 }
@@ -760,7 +760,7 @@ static void set_exception_handler(void)
 }
 
 /* return the PC at frame level 'level'. Return non zero if not found */
-static int rt_get_caller_pc(addr_t *paddr, CONTEXT *uc, int level)
+int rt_get_caller_pc(addr_t *paddr, CONTEXT *uc, int level)
 {
     addr_t fp, pc;
     int i;

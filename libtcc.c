@@ -458,22 +458,22 @@ static void tcc_split_path(TCCState *s, void *p_ary, int *p_nb_ary, const char *
 
 /********************************************************/
 
-static void strcat_vprintf(char *buf, int buf_size, const char *fmt, va_list ap)
+void strcat_vprintf(char *buf, int buf_size, const char *fmt, va_list ap)
 {
     int len;
     len = strlen(buf);
     vsnprintf(buf + len, buf_size - len, fmt, ap);
 }
 
-static void strcat_printf(char *buf, int buf_size, const char *fmt, ...)
-{
-    va_list ap;
-    va_start(ap, fmt);
-    strcat_vprintf(buf, buf_size, fmt, ap);
-    va_end(ap);
-}
+void strcat_printf(char *buf, int buf_size, const char *fmt, ...);
+// {
+//     va_list ap;
+//     va_start(ap, fmt);
+//     strcat_vprintf(buf, buf_size, fmt, ap);
+//     va_end(ap);
+// }
 
-static void error1(TCCState *s1, int is_warning, const char *fmt, va_list ap)
+void error1(TCCState *s1, int is_warning, const char *fmt, va_list ap)
 {
     char buf[2048];
     BufferedFile **pf, *f;
@@ -525,45 +525,45 @@ LIBTCCAPI void tcc_set_error_func(TCCState *s, void *error_opaque,
 }
 
 /* error without aborting current compilation */
-PUB_FUNC void tcc_error_noabort(const char *fmt, ...)
-{
-    TCCState *s1 = tcc_state;
-    va_list ap;
+// PUB_FUNC void tcc_error_noabort(const char *fmt, ...)
+// {
+//     TCCState *s1 = tcc_state;
+//     va_list ap;
 
-    va_start(ap, fmt);
-    error1(s1, 0, fmt, ap);
-    va_end(ap);
-}
+//     va_start(ap, fmt);
+//     error1(s1, 0, fmt, ap);
+//     va_end(ap);
+// }
 
-PUB_FUNC void tcc_error(const char *fmt, ...)
-{
-    TCCState *s1 = tcc_state;
-    va_list ap;
+// PUB_FUNC void tcc_error(const char *fmt, ...)
+// {
+//     TCCState *s1 = tcc_state;
+//     va_list ap;
 
-    va_start(ap, fmt);
-    error1(s1, 0, fmt, ap);
-    va_end(ap);
-    /* better than nothing: in some cases, we accept to handle errors */
-    if (s1->error_set_jmp_enabled) {
-        longjmp(s1->error_jmp_buf, 1);
-    } else {
-        /* XXX: eliminate this someday */
-        exit(1);
-    }
-}
+//     va_start(ap, fmt);
+//     error1(s1, 0, fmt, ap);
+//     va_end(ap);
+//     /* better than nothing: in some cases, we accept to handle errors */
+//     if (s1->error_set_jmp_enabled) {
+//         longjmp(s1->error_jmp_buf, 1);
+//     } else {
+//         /* XXX: eliminate this someday */
+//         exit(1);
+//     }
+// }
 
-PUB_FUNC void tcc_warning(const char *fmt, ...)
-{
-    TCCState *s1 = tcc_state;
-    va_list ap;
+// PUB_FUNC void tcc_warning(const char *fmt, ...)
+// {
+//     TCCState *s1 = tcc_state;
+//     va_list ap;
 
-    if (s1->warn_none)
-        return;
+//     if (s1->warn_none)
+//         return;
 
-    va_start(ap, fmt);
-    error1(s1, 1, fmt, ap);
-    va_end(ap);
-}
+//     va_start(ap, fmt);
+//     error1(s1, 1, fmt, ap);
+//     va_end(ap);
+// }
 
 /********************************************************/
 /* I/O layer */
