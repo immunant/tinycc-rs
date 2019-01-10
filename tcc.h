@@ -386,7 +386,7 @@ typedef struct TokenSym {
     struct Sym *sym_identifier; /* direct pointer to identifier */
     int tok; /* token number */
     int len;
-    char str[1];
+    char str[];
 } TokenSym;
 
 #ifdef TCC_TARGET_PE
@@ -566,7 +566,7 @@ typedef struct BufferedFile {
     char filename[1024];    /* filename */
     char *true_filename; /* filename not modified by # line directive */
     unsigned char unget[4];
-    unsigned char buffer[1]; /* extra size for CH_EOB char */
+    unsigned char buffer[]; /* extra size for CH_EOB char */
 } BufferedFile;
 
 #define CH_EOB   '\\'       /* end of buffer or '\0' char in file */
