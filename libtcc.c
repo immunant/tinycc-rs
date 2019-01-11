@@ -30,7 +30,7 @@ ST_DATA int gnu_ext = 1;
 ST_DATA int tcc_ext = 1;
 
 /* XXX: get rid of this ASAP */
-ST_DATA struct TCCState *tcc_state;
+struct TCCState *tcc_state;
 
 static int nb_states;
 

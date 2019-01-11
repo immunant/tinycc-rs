@@ -1082,7 +1082,7 @@ ST_DATA int gnu_ext;
 /* use Tiny C extensions */
 ST_DATA int tcc_ext;
 /* XXX: get rid of this ASAP */
-ST_DATA struct TCCState *tcc_state;
+extern struct TCCState *tcc_state;
 
 /* public functions currently used by the tcc main function */
 ST_FUNC char *pstrcpy(char *buf, int buf_size, const char *s);
