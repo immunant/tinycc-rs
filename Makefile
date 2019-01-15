@@ -352,6 +352,16 @@ tests2.%:
 testspp.%:
 	$(MAKE) -C tests/pp $@
 
+RUST = $(TOPSRC)/rust
+TARGET = $(RUST)/target
+DEBUG = $(TARGET)/debug
+TCC-RS = $(DEBUG)/tcc
+# run all tests using rust generated binary
+rust-test:
+	ln -sf $(TCC-RS) tcc
+	$(MAKE) -C tests
+
+
 clean:
 	rm -f tcc$(EXESUF) tcc_p$(EXESUF) *-tcc$(EXESUF) tcc.pod
 	rm -f  *~ *.o *.a *.so* *.out *.log lib*.def *.exe *.dll a.out tags TAGS
