@@ -49,9 +49,8 @@ int main()
     printf("%f\n%f\n%f\n\n", dd0, dd1, dd2);
     printf("\n");
 
+/* `long double` does not translate
 #ifdef __TINYC__
-    /* TCC extension
-       binary floating constant */
     long double la0 = 0B.110101100P12L;
     long double la1 = 0b.110101100p-12l;
     long double la2 = 0b.110101100p+12l;
@@ -73,5 +72,23 @@ int main()
     printf("%Lf\n%Lf\n%Lf\n\n", ld0, ld1, ld2);
 #endif
 
+Add this to the end of 70_floating_point_literals.output when f128 are added within rust,
+or correctly handled within c2rust
+3424.000000
+0.000204
+3424.000000
+
+1756112.000000
+0.104672
+1756112.000000
+
+1753088.000000
+0.104492
+1753088.000000
+
+1753088.000000
+0.104492
+1753088.000000
+*/
     return 0;
 }

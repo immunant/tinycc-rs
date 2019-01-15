@@ -32,6 +32,12 @@ ifeq (-$(CONFIG_WIN32)-$(CONFIG_i386)$(CONFIG_arm)-,--yes-)
  SKIP += 95_bitfields%.test # type_align is different on 32bit-non-windows
 endif
 
+FLAGS =
+22_floating_point.test : FLAGS += -lm
+
+FLAGS =
+24_math_library.test : FLAGS += -lm
+
 # Some tests might need arguments
 ARGS =
 31_args.test : ARGS = arg1 arg2 arg3 arg4 arg5
