@@ -1635,7 +1635,8 @@ ST_FUNC void *dlsym(void *handle, const char *symbol);
 ST_DATA int rt_num_callers;
 ST_DATA const char **rt_bound_error_msg;
 ST_DATA void *rt_prog_main;
-ST_FUNC void tcc_set_num_callers(int n);
+PUB_FUNC void tcc_set_num_callers(int n);
+PUB_FUNC void tcc_set_rt_prog_main(void *prog_main);
 #endif
 ST_FUNC void tcc_run_free(TCCState *s1);
 #endif

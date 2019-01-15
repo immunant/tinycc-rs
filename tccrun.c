@@ -36,9 +36,8 @@
 # else
 #  define ucontext_t CONTEXT
 # endif
-ST_DATA int rt_num_callers = 6;
 ST_DATA const char **rt_bound_error_msg;
-ST_DATA void *rt_prog_main;
+// ST_DATA void *rt_prog_main;
 int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level);
 void rt_error(ucontext_t *uc, const char *fmt, ...);
 static void set_exception_handler(void);
@@ -127,7 +126,7 @@ LIBTCCAPI int tcc_run(TCCState *s1, int argc, char **argv)
 #ifdef CONFIG_TCC_BACKTRACE
     if (s1->do_debug) {
         set_exception_handler();
-        rt_prog_main = prog_main;
+        tcc_set_rt_prog_main(prog_main);
     }
 #endif
 
@@ -323,11 +322,6 @@ static void win64_del_function_table(void *p)
 
 /* ------------------------------------------------------------- */
 #ifdef CONFIG_TCC_BACKTRACE
-
-ST_FUNC void tcc_set_num_callers(int n)
-{
-    rt_num_callers = n;
-}
 
 /* print the position in the source file of PC value 'pc' by reading
    the stabs debug information */

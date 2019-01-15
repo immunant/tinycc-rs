@@ -13,13 +13,24 @@
 # endif
 #endif
 
-extern int rt_num_callers;
-extern void *rt_prog_main;
+ST_DATA int rt_num_callers = 6;
+ST_DATA void *rt_prog_main;
 
 int rt_get_caller_pc(addr_t *paddr, ucontext_t *uc, int level);
 addr_t rt_printline(addr_t wanted_pc, const char *msg);
 void strcat_vprintf(char *buf, int buf_size, const char *fmt, va_list ap);
 void error1(TCCState *s1, int is_warning, const char *fmt, va_list ap);
+
+void tcc_set_num_callers(int n)
+{
+    rt_num_callers = n;
+}
+
+void tcc_set_rt_prog_main(void *prog_main)
+{
+    rt_prog_main = prog_main;
+}
+
 
 void rt_error(ucontext_t *uc, const char *fmt, ...) {
     va_list ap;
