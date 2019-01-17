@@ -497,7 +497,9 @@ rm -f $TMPN* $CONFTEST
 
 # ---------------------------------------------------------------------------
 # build tree in object directory if source path is different from current one
+# ^ No reason for this, all the makefiles should stay in project directory
 
+: '
 fn_makelink()
 {
     tgt=$1/$2
@@ -523,5 +525,5 @@ if test "$source_path_used" = "yes" ; then
     fn_makelink $source_path $f
   done
 fi
-
+'
 # ---------------------------------------------------------------------------
