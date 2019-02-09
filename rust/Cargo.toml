@@ -6,6 +6,7 @@ edition = "2018"
 
 [dependencies]
 c2rust-bitfields = { path = "../../../../c2rust-bitfields" }
+num-traits = "0.2.6"
 f128 = "0.2.2"
 
 [build-dependencies]
